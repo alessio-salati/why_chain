@@ -30,12 +30,16 @@ bundle install
 ```ruby
 trace = WhyChain.trace(object, :method_name)
 pp trace.to_h
+
+puts WhyChain.explain(object, :method_name)
 ```
 
 `trace` is a `WhyChain::DispatchTrace` object with readers:
 - `lookup_chain`
 - `owner`
 - `next_super_owner`
+- `source_location`
+- `steps` (`WhyChain::DispatchStep` objects)
 
 As hash:
 
@@ -44,8 +48,29 @@ trace.to_h
 # {
   lookup_chain: [...],
   owner: SomeClassOrModule,
-  next_super_owner: AnotherClassOrModule
+  next_super_owner: AnotherClassOrModule,
+  source_location: ["file.rb", 12],
+  steps: [
+    { owner: SomeClassOrModule, source_location: ["file.rb", 12] }
+  ]
 # }
+```
+
+`WhyChain.explain` returns a human-readable dispatch explanation:
+
+```ruby
+puts WhyChain.explain(B.new, :foo)
+# Ruby dispatch explanation for :foo
+#
+# 1. P#foo
+#    defined at:
+#    /path/to/file.rb:12
+#
+#    calls super ->
+#
+# 2. A#foo
+#    defined at:
+#    /path/to/file.rb:7
 ```
 
 ## Usage examples

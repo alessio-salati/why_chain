@@ -16,7 +16,7 @@ module WhyChain
       @owner = owner
       @next_super_owner = next_super_owner
       @source_location = source_location
-      @steps = steps
+      @steps = steps.map { |step| coerce_step(step) }
     end
 
     def to_h
@@ -25,8 +25,16 @@ module WhyChain
         owner: owner,
         next_super_owner: next_super_owner,
         source_location: source_location,
-        steps: steps
+        steps: steps.map(&:to_h)
       }
+    end
+
+    private
+
+    def coerce_step(step)
+      return step if step.is_a?(DispatchStep)
+
+      DispatchStep.new(**step)
     end
   end
 end

@@ -40,10 +40,10 @@ module WhyChain
       lookup_chain.filter_map do |mod|
         next unless defines_instance_method?(mod)
 
-        {
+        DispatchStep.new(
           owner: mod,
           source_location: mod.instance_method(@method_name).source_location
-        }
+        )
       end
     end
 

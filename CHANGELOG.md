@@ -1,5 +1,10 @@
 ## [Unreleased]
 
+## [0.2.1] - 2026-05-11
+
+- Refactor internals by extracting shared method-definition predicate into `MethodDefinition`.
+- Remove duplicated visibility checks from `Tracer` and `MethodLocator` without behavior changes.
+
 ## [0.2.0] - 2026-05-11
 
 - Add `WhyChain.explain(object, method_name)` for human-readable dispatch output.

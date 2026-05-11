@@ -12,7 +12,9 @@ module WhyChain
       DispatchTrace.new(
         lookup_chain: lookup_chain,
         owner: owner,
-        next_super_owner: next_super_owner
+        next_super_owner: next_super_owner,
+        source_location: method_object.source_location,
+        steps: steps
       )
     end
 
@@ -23,11 +25,32 @@ module WhyChain
     end
 
     def owner
-      @owner ||= @object.method(@method_name).owner
+      @owner ||= method_object.owner
+    end
+
+    def method_object
+      @method_object ||= @object.method(@method_name)
     end
 
     def next_super_owner
       MethodLocator.new(lookup_chain, owner, @method_name).next_super_owner
+    end
+
+    def steps
+      lookup_chain.filter_map do |mod|
+        next unless defines_instance_method?(mod)
+
+        {
+          owner: mod,
+          source_location: mod.instance_method(@method_name).source_location
+        }
+      end
+    end
+
+    def defines_instance_method?(mod)
+      mod.method_defined?(@method_name, false) ||
+        mod.private_method_defined?(@method_name, false) ||
+        mod.protected_method_defined?(@method_name, false)
     end
   end
 end

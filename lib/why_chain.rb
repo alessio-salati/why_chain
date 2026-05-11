@@ -4,6 +4,7 @@ require_relative "why_chain/version"
 require_relative "why_chain/tracer"
 require_relative "why_chain/dispatch_trace"
 require_relative "why_chain/dispatch_step"
+require_relative "why_chain/method_definition"
 require_relative "why_chain/method_locator"
 require_relative "why_chain/explainer"
 

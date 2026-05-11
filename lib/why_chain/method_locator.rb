@@ -15,16 +15,8 @@ module WhyChain
       return nil unless owner_index
 
       @lookup_chain[(owner_index + 1)..].find do |mod|
-        defines_instance_method?(mod)
+        MethodDefinition.defined_directly?(mod, @method_name)
       end
-    end
-
-    private
-
-    def defines_instance_method?(mod)
-      mod.method_defined?(@method_name, false) ||
-        mod.private_method_defined?(@method_name, false) ||
-        mod.protected_method_defined?(@method_name, false)
     end
   end
 end

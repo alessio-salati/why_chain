@@ -38,19 +38,13 @@ module WhyChain
 
     def steps
       lookup_chain.filter_map do |mod|
-        next unless defines_instance_method?(mod)
+        next unless MethodDefinition.defined_directly?(mod, @method_name)
 
         DispatchStep.new(
           owner: mod,
           source_location: mod.instance_method(@method_name).source_location
         )
       end
-    end
-
-    def defines_instance_method?(mod)
-      mod.method_defined?(@method_name, false) ||
-        mod.private_method_defined?(@method_name, false) ||
-        mod.protected_method_defined?(@method_name, false)
     end
   end
 end

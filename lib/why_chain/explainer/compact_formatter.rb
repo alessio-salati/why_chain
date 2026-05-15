@@ -25,7 +25,8 @@ module WhyChain
       private
 
       def step_line(step, index)
-        label = @colorizer.colorize("#{index + 1}) #{step.owner}##{@method_name}", :owner)
+        kind = @colorizer.colorize("[#{step.kind || :unknown}]", :kind)
+        label = @colorizer.colorize("#{index + 1}) #{kind} #{step.owner}##{@method_name}", :owner)
         location = @colorizer.format_source_location(step.source_location, color: false)
         "#{label}  #{@colorizer.colorize(location, :location)}"
       end

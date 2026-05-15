@@ -1,5 +1,11 @@
 ## [Unreleased]
 
+## [0.3.0] - 2026-05-15
+
+- Add style/color options to `WhyChain.explain` with `:teaching` and compact debug format.
+- Introduce compact step labels for dispatch kind: `singleton`, `prepend`, `include`, and `class`.
+- Refactor explainer internals into dedicated formatter and colorizer classes for maintainability.
+
 ## [0.2.1] - 2026-05-11
 
 - Refactor internals by extracting shared method-definition predicate into `MethodDefinition`.

@@ -37,14 +37,27 @@ module WhyChain
     end
 
     def steps
+      receiver_class = @object.is_a?(Module) ? @object : @object.class
+      receiver_class_index = lookup_chain.index(receiver_class)
+
       lookup_chain.filter_map do |mod|
         next unless MethodDefinition.defined_directly?(mod, @method_name)
 
         DispatchStep.new(
           owner: mod,
-          source_location: mod.instance_method(@method_name).source_location
+          source_location: mod.instance_method(@method_name).source_location,
+          kind: step_kind_for(mod, receiver_class_index)
         )
       end
+    end
+
+    def step_kind_for(mod, receiver_class_index)
+      return :singleton if mod == @object.singleton_class
+      return :class if mod.is_a?(Class)
+
+      return :include unless receiver_class_index
+
+      lookup_chain.index(mod) < receiver_class_index ? :prepend : :include
     end
   end
 end

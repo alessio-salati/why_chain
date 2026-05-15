@@ -1,5 +1,10 @@
 # frozen_string_literal: true
 
+STEP_VALUES = [
+  { owner: String, source_location: ["trace.rb", 12], kind: :class },
+  { owner: Comparable, source_location: nil, kind: :include }
+].freeze
+
 RSpec.describe WhyChain::DispatchTrace do
   let(:trace) do
     described_class.new(
@@ -7,7 +12,7 @@ RSpec.describe WhyChain::DispatchTrace do
       owner: String,
       next_super_owner: Comparable,
       source_location: ["trace.rb", 12],
-      steps: [{ owner: String, source_location: ["trace.rb", 12] }, { owner: Comparable, source_location: nil }]
+      steps: STEP_VALUES
     )
   end
 
@@ -19,7 +24,7 @@ RSpec.describe WhyChain::DispatchTrace do
           owner: String,
           next_super_owner: Comparable,
           source_location: ["trace.rb", 12],
-          steps: [{ owner: String, source_location: ["trace.rb", 12] }, { owner: Comparable, source_location: nil }]
+          steps: STEP_VALUES
         }
       )
     end

@@ -7,6 +7,7 @@ module WhyChain
       ANSI_CODES = {
         title: "1;36",
         owner: "32",
+        kind: "35",
         label: "2;37",
         location: "2;37",
         native: "33",

@@ -9,9 +9,9 @@ RSpec.describe "WhyChain.explain formatting options" do
     explanation = WhyChain.explain(klass.new, :save, style: :compact)
 
     expect(explanation).to include("WhyChain :save")
-    expect(explanation).to include("1) #{auditable}#save")
+    expect(explanation).to include("1) [prepend] #{auditable}#save")
     expect(explanation).to include("-> super")
-    expect(explanation).to include("2) #{base}#save")
+    expect(explanation).to include("2) [class] #{base}#save")
   end
 
   it "supports teaching style output" do

@@ -1,21 +1,29 @@
 # frozen_string_literal: true
 
+require_relative "explainer/colorizer"
+require_relative "explainer/teaching_formatter"
+require_relative "explainer/compact_formatter"
+
 module WhyChain
   # Formats a human-friendly runtime dispatch explanation.
   class Explainer
-    def initialize(trace, method_name)
+    def initialize(trace, method_name, style: :teaching, color: :auto, graph: true)
       @trace = trace
       @method_name = method_name
+      @style = style
+      @graph = graph
+      @colorizer = Colorizer.new(color)
     end
 
     def to_s
-      lines = ["Ruby dispatch explanation for :#{@method_name}", ""]
-
-      explanation_steps.each_with_index do |step, index|
-        lines.concat(step_lines(step, index))
+      case @style
+      when :teaching
+        TeachingFormatter.new(@method_name, explanation_steps, @graph, @colorizer).render
+      when :compact
+        CompactFormatter.new(@method_name, explanation_steps, @graph, @colorizer).render
+      else
+        raise ArgumentError, "Unknown style: #{@style.inspect}"
       end
-
-      lines.join("\n")
     end
 
     private
@@ -24,22 +32,6 @@ module WhyChain
       return @trace.steps unless @trace.steps.empty?
 
       [DispatchStep.new(owner: @trace.owner, source_location: @trace.source_location)]
-    end
-
-    def format_source_location(source_location)
-      source_location ? source_location.join(":") : "<native>"
-    end
-
-    def step_lines(step, index)
-      lines = [
-        "#{index + 1}. #{step.owner}##{@method_name}",
-        "   defined at:",
-        "   #{format_source_location(step.source_location)}"
-      ]
-
-      return lines unless index < explanation_steps.length - 1
-
-      lines + ["", "   calls super ->", ""]
     end
   end
 end

@@ -16,7 +16,13 @@ module WhyChain
     Tracer.new(object, method_name).trace
   end
 
-  def self.explain(object, method_name)
-    Explainer.new(trace(object, method_name), method_name).to_s
+  def self.explain(object, method_name, style: :teaching, color: :auto, graph: true)
+    Explainer.new(
+      trace(object, method_name),
+      method_name,
+      style: style,
+      color: color,
+      graph: graph
+    ).to_s
   end
 end
